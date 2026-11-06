@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Module | Hyipro</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        .header {
+            background: #172554;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #172554;
+            border: 1px solid #e1e5ef;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 5px 15px #00000012;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 16px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Student Management</h1>
+            <p>Manage student registration and student records in Hyipro.</p>
+        </div>
+
+        <div class="cards">
+            <a class="card" href="{% url 'student_list' %}">
+                <h3>📋 View Student Records</h3>
+                <p>View the student records available to your account.</p>
+                <span class="btn">View Records</span>
+            </a>
+
+            {% if request.user.is_staff %}
+            <a class="card" href="{% url 'student_create' %}">
+                <h3>➕ Add Student</h3>
+                <p>Register a new student and create their login account.</p>
+                <span class="btn">Add Student</span>
+            </a>
+            {% endif %}
+
+            <a class="card" href="{% url 'my_profile' %}">
+                <h3>👤 My Profile</h3>
+                <p>View and update your own student profile.</p>
+                <span class="btn">Open Profile</span>
+            </a>
+        </div>
+
+        <a class="back" href="{% url 'home' %}">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

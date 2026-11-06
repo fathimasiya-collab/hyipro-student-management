@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Security | Hyipro</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f5fa;
+            margin: 0;
+            padding: 30px;
+            color: #263247;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        h1 {
+            color: #263b70;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .detail {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #758096;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .value {
+            font-weight: bold;
+        }
+
+        .status {
+            color: #16803d;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 20px;
+            border-radius: 7px;
+            text-decoration: none;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .primary {
+            background: #263b70;
+            color: white;
+        }
+
+        .secondary {
+            background: #e8ebf2;
+            color: #263247;
+        }
+
+        .messages {
+            background: #e2f6e9;
+            color: #176b35;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Account Security</h1>
+
+        <a href="{% url 'home' %}" class="btn secondary">
+            Dashboard
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="messages">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <h2>Account Information</h2>
+
+        <div class="detail">
+            <div class="label">Username</div>
+            <div class="value">{{ user.username }}</div>
+        </div>
+
+        <div class="detail">
+            <div class="label">Email Address</div>
+            <div class="value">{{ user.email|default:"Not provided" }}</div>
+        </div>
+
+        <div class="detail">
+            <div class="label">Account Type</div>
+            <div class="value">
+                {% if user.is_staff %}
+                    Administrator
+                {% else %}
+                    Student
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="detail">
+            <div class="label">Account Status</div>
+            <div class="value status">
+                {% if user.is_active %}
+                    Active
+                {% else %}
+                    Inactive
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Password Security</h2>
+
+        <p>
+            Keep your account secure by regularly updating
+            your password. Use a strong password that
+            you do not share with others.
+        </p>
+
+        <a href="{% url 'change_password' %}"
+           class="btn primary">
+            Change Password
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile | Hyipro</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f5fa;
+            margin: 0;
+            padding: 30px;
+            color: #263247;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #263b70;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .profile-top {
+            text-align: center;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 25px;
+        }
+
+        .avatar {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: #263b70;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: auto auto 15px;
+        }
+
+        .profile-top h2 {
+            margin: 8px 0;
+        }
+
+        .admission {
+            color: #68758a;
+            font-size: 14px;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .detail {
+            padding: 12px;
+            background: #f8f9fc;
+            border-radius: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .detail label {
+            display: block;
+            color: #758096;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .detail p {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 11px 20px;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .primary {
+            background: #263b70;
+            color: white;
+        }
+
+        .secondary {
+            background: #e8ebf2;
+            color: #263247;
+        }
+
+        .messages {
+            background: #e2f6e9;
+            color: #176b35;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 18px;
+        }
+
+        .form-field {
+            margin-bottom: 18px;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccd2df;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+        }
+
+        .errorlist {
+            color: #c62828;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>My Profile</h1>
+        <a href="{% url 'home' %}" class="btn secondary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="messages">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="profile-card">
+
+        {% if edit_mode %}
+
+            <h2>Edit Profile</h2>
+            <p>Update your personal and academic information.</p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="form-field">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.errors %}
+                            <div class="errorlist">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="buttons">
+                    <button type="submit" class="btn primary">
+                        Save Changes
+                    </button>
+
+                    <a href="{% url 'my_profile' %}"
+                       class="btn secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+
+        {% else %}
+
+            <div class="profile-top">
+                <div class="avatar">
+                    {{ profile.full_name|first|upper }}
+                </div>
+
+                <h2>{{ profile.full_name }}</h2>
+
+                <div class="admission">
+                    Admission No: {{ profile.admission_number }}
+                </div>
+            </div>
+
+            <div class="details">
+
+                <div class="detail">
+                    <label>Full Name</label>
+                    <p>{{ profile.full_name|default:"Not provided" }}</p>
+                </div>
+
+                <div class="detail">
+                    <label>Email Address</label>
+                    <p>{{ request.user.email|default:"Not provided" }}</p>
+                </div>
+
+                <div class="detail">
+                    <label>Date of Birth</label>
+                    <p>{{ profile.date_of_birth|date:"d M Y"|default:"Not provided" }}</p>
+                </div>
+
+                <div class="detail">
+                    <label>Phone Number</label>
+                    <p>{{ profile.phone|default:"Not provided" }}</p>
+                </div>
+
+                <div class="detail">
+                    <label>Course</label>
+                    <p>{{ profile.course|default:"Not provided" }}</p>
+                </div>
+
+                <div class="detail">
+                    <label>Admission Number</label>
+                    <p>{{ profile.admission_number }}</p>
+                </div>
+
+                <div class="detail">
+                    <label>Registered On</label>
+                    <p>{{ profile.created_at|date:"d M Y" }}</p>
+                </div>
+
+                <div class="detail full">
+                    <label>Address</label>
+                    <p>{{ profile.address|default:"Not provided" }}</p>
+                </div>
+
+            </div>
+
+            <div class="buttons">
+                <a href="{% url 'my_profile' %}?edit=1"
+                   class="btn primary">
+                    Edit Profile
+                </a>
+
+                <a href="{% url 'home' %}"
+                   class="btn secondary">
+                    Back to Dashboard
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+</body>
+</html>

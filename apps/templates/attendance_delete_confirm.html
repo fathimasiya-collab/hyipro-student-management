@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Attendance | Hyipro</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 90px auto;
+            padding: 35px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        button, a {
+            display: inline-block;
+            padding: 12px 18px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            background: #dc2626;
+            color: white;
+        }
+
+        a {
+            background: #1e40af;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Delete Attendance</h2>
+
+    <p>
+        Are you sure you want to delete this attendance record?
+    </p>
+
+    <p>
+        Student: <strong>{{ record.student.full_name }}</strong>
+    </p>
+
+    <p>
+        Date: <strong>{{ record.date|date:"d-m-Y" }}</strong>
+    </p>
+
+    <p>
+        Status: <strong>{{ record.status }}</strong>
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <button type="submit">Yes, Delete</button>
+
+        <a href="{% url 'attendance_module' %}">
+            Cancel
+        </a>
+    </form>
+
+</div>
+
+</body>
+</html>

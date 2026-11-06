@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attendance Management | Hyipro</title>
+
+    <link rel="stylesheet" href="{% static 'apps/css/style.css' %}">
+
+    <style>
+        body {
+            background: #f4f6fc;
+        }
+
+        .admin-page {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 22px;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #263fa8, #7657e8);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 28px;
+        }
+
+        .admin-header h1 {
+            color: white;
+            margin: 0 0 8px;
+            font-size: 27px;
+        }
+
+        .admin-header p {
+            color: #e2e6ff;
+            margin: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .top-bar h2 {
+            margin: 0 0 5px;
+        }
+
+        .top-bar p {
+            margin: 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-block;
+            padding: 12px 18px;
+            background: #3454d1;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: #263fa8;
+        }
+
+        .dashboard-btn {
+            background: #202b45;
+        }
+
+        .dashboard-btn:hover {
+            background: #111a30;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 23px;
+            border-radius: 14px;
+            border: 1px solid #e8ebf3;
+            box-shadow: 0 4px 15px rgba(30, 45, 80, 0.04);
+        }
+
+        .stat-icon {
+            font-size: 26px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card h3 {
+            color: #7c879d;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0 0 10px;
+        }
+
+        .stat-card p {
+            font-size: 29px;
+            font-weight: 700;
+            margin: 0;
+            color: #202b45;
+        }
+
+        .present-number {
+            color: #16a36a !important;
+        }
+
+        .absent-number {
+            color: #e34d59 !important;
+        }
+
+        .late-number {
+            color: #d99524 !important;
+        }
+
+        .filter-card,
+        .records-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            border: 1px solid #e8ebf3;
+            box-shadow: 0 4px 15px rgba(30, 45, 80, 0.04);
+            margin-bottom: 25px;
+        }
+
+        .filter-card h3,
+        .records-card h3 {
+            margin-top: 0;
+        }
+
+        .filter-form {
+            display: flex;
+            align-items: end;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .filter-form input {
+            min-width: 230px;
+            margin: 0;
+        }
+
+        .filter-btn {
+            background: #3454d1;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .clear-btn {
+            display: inline-block;
+            background: #eef1fa;
+            color: #3454d1;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .table-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .table-heading h3 {
+            margin-bottom: 5px;
+        }
+
+        .table-heading p {
+            margin: 0;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        .attendance-table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+        }
+
+        .attendance-table th {
+            background: #f5f7fc;
+            color: #7c879d;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .attendance-table th,
+        .attendance-table td {
+            padding: 16px 13px;
+            text-align: left;
+            border-bottom: 1px solid #e8ebf3;
+        }
+
+        .attendance-table tr:hover td {
+            background: #fafbff;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #202b45;
+        }
+
+        .admission-number {
+            color: #3454d1;
+            font-weight: 600;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-present {
+            background: #e4f7ed;
+            color: #168653;
+        }
+
+        .status-absent {
+            background: #fde9eb;
+            color: #d43e4a;
+        }
+
+        .status-late {
+            background: #fff3dc;
+            color: #b87916;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .edit-btn {
+            background: #e9edff;
+            color: #3454d1;
+        }
+
+        .delete-btn {
+            background: #fde9eb;
+            color: #d43e4a;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 35px;
+            color: #7c879d;
+        }
+
+        .messages {
+            background: #e4f7ed;
+            color: #168653;
+            padding: 14px 18px;
+            border-radius: 9px;
+            margin-bottom: 18px;
+        }
+
+        @media(max-width: 850px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 500px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-page {
+                padding: 0 13px;
+            }
+
+            .admin-header {
+                padding: 23px;
+            }
+
+            .filter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-form input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="admin-page">
+
+    <div class="admin-header">
+        <h1>Hyipro Management System</h1>
+        <p>Administrator Portal | Attendance Management</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="messages">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="top-bar">
+
+        <div>
+            <h2>Attendance Records</h2>
+            <p>Monitor and manage student attendance.</p>
+        </div>
+
+        <div class="actions">
+
+            <a href="{% url 'attendance_create' %}"
+               class="action-btn">
+                + Mark Attendance
+            </a>
+
+            <a href="{% url 'home' %}"
+               class="action-btn dashboard-btn">
+                Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <h3>Total Records</h3>
+            <p>{{ total_records }}</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <h3>Present</h3>
+            <p class="present-number">{{ present_count }}</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">❌</div>
+            <h3>Absent</h3>
+            <p class="absent-number">{{ absent_count }}</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⏰</div>
+            <h3>Late</h3>
+            <p class="late-number">{{ late_count }}</p>
+        </div>
+
+    </div>
+
+    <div class="filter-card">
+
+        <h3>Filter Attendance</h3>
+        <p>Select a date to view attendance records.</p>
+
+        <form method="GET" class="filter-form">
+
+            <div>
+                <label for="attendance-date">Select Date</label>
+
+                <input
+                    type="date"
+                    id="attendance-date"
+                    name="date"
+                    value="{{ selected_date|default:'' }}"
+                >
+            </div>
+
+            <button type="submit" class="filter-btn">
+                Apply Filter
+            </button>
+
+            <a href="{% url 'attendance_module' %}"
+               class="clear-btn">
+                Clear Filter
+            </a>
+
+        </form>
+
+    </div>
+
+    <div class="records-card">
+
+        <div class="table-heading">
+            <div>
+                <h3>Student Attendance History</h3>
+                <p>View, edit and manage attendance records.</p>
+            </div>
+        </div>
+
+        <div class="table-scroll">
+
+            <table class="attendance-table">
+
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Admission Number</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Remarks</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for record in records %}
+
+                    <tr>
+
+                        <td class="student-name">
+                            {{ record.student.full_name }}
+                        </td>
+
+                        <td class="admission-number">
+                            {{ record.student.admission_number }}
+                        </td>
+
+                        <td>
+                            {{ record.date|date:"d-m-Y" }}
+                        </td>
+
+                        <td>
+
+                            {% if record.status == 'Present' %}
+                                <span class="status status-present">
+                                    Present
+                                </span>
+
+                            {% elif record.status == 'Absent' %}
+                                <span class="status status-absent">
+                                    Absent
+                                </span>
+
+                            {% elif record.status == 'Late' %}
+                                <span class="status status-late">
+                                    Late
+                                </span>
+
+                            {% else %}
+                                {{ record.status }}
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ record.remarks|default:"-" }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'attendance_edit' record.pk %}"
+                                class="edit-btn">
+                                Edit
+                            </a>
+
+                            <a
+                                href="{% url 'attendance_delete' record.pk %}"
+                                class="delete-btn">
+                                Delete
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="6" class="empty-message">
+                            No attendance records found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

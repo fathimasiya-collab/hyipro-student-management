@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Student | Hyipro</title>
+</head>
+<body>
+    <h1>Delete Student Record</h1>
+
+    <p>
+        Are you sure you want to delete the record for
+        <strong>{{ student.full_name }}</strong>?
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete Record</button>
+    </form>
+
+    <p>
+        <a href="{% url 'student_list' %}">Cancel</a>
+    </p>
+</body>
+</html>

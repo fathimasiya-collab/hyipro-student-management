@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Examination Results</title>
+    <style>
+        body { font-family: Arial; background: #f4f6f9; padding: 30px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #eaf0ff; }
+        a, button { padding: 8px 12px; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; }
+        .add { background: #2563eb; color: white; }
+        .edit { background: #16a34a; color: white; }
+        .delete { background: #dc2626; color: white; }
+        .back { background: #555; color: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h2>{{ examination.exam_name }} - Student Results</h2>
+
+    <p><strong>Course:</strong> {{ examination.course.course_name }}</p>
+    <p><strong>Total Marks:</strong> {{ examination.total_marks }}</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if user.is_staff %}
+        <a href="{% url 'result_create' examination.pk %}" class="add">
+            + Add Student Marks
+        </a>
+    {% endif %}
+
+    <a href="{% url 'examination_module' %}" class="back">
+        Back to Examinations
+    </a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Admission Number</th>
+                <th>Secured Marks</th>
+                <th>Total Marks</th>
+                <th>Percentage</th>
+                {% if user.is_staff %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for result in results %}
+                <tr>
+                    <td>{{ result.student.full_name }}</td>
+                    <td>{{ result.student.admission_number }}</td>
+                    <td>{{ result.secured_marks }}</td>
+                    <td>{{ examination.total_marks }}</td>
+                    <td>
+                        {% widthratio result.secured_marks examination.total_marks 100 %}%
+                    </td>
+
+                    {% if user.is_staff %}
+                        <td>
+                            <a href="{% url 'result_edit' result.pk %}" class="edit">Edit</a>
+                            <a href="{% url 'result_delete' result.pk %}" class="delete">Delete</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">No student results have been added yet.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

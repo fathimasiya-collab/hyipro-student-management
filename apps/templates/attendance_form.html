@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }} | Hyipro</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            margin: 0;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 650px;
+            width: 90%;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 18px 0 8px;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        button, .button {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 12px 18px;
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .errors {
+            color: #dc2626;
+        }
+
+        .errorlist {
+            color: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Hyipro Management System</h1>
+</header>
+
+<div class="container">
+
+    <h2>{{ title }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <label for="{{ form.student.id_for_label }}">
+            Select Student
+        </label>
+        {{ form.student }}
+        {{ form.student.errors }}
+
+        <label for="{{ form.date.id_for_label }}">
+            Attendance Date
+        </label>
+        {{ form.date }}
+        {{ form.date.errors }}
+
+        <label for="{{ form.status.id_for_label }}">
+            Attendance Status
+        </label>
+        {{ form.status }}
+        {{ form.status.errors }}
+
+        <label for="{{ form.remarks.id_for_label }}">
+            Remarks
+        </label>
+        {{ form.remarks }}
+        {{ form.remarks.errors }}
+
+        <button type="submit">Save Attendance</button>
+
+        <a href="{% url 'attendance_module' %}" class="button">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Course | Hyipro</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 80px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        button, a {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            background: #b42318;
+            color: white;
+        }
+
+        a {
+            background: #17365d;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Delete Course</h2>
+
+        <p>
+            Are you sure you want to delete
+            <strong>{{ course.course_name }}</strong>?
+        </p>
+
+        <p>This action cannot be undone.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Yes, Delete</button>
+
+            <a href="{% url 'courses_module' %}">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

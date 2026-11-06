@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Examination</title>
+</head>
+<body style="font-family: Arial; background: #f4f6f9; padding: 30px;">
+
+<div style="max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 10px;">
+
+    <h2>Delete Examination</h2>
+
+    <p>Are you sure you want to delete this examination?</p>
+
+    <p><strong>Exam:</strong> {{ examination.exam_name }}</p>
+    <p><strong>Course:</strong> {{ examination.course.course_name }}</p>
+    <p><strong>Date:</strong> {{ examination.exam_date }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" style="background: #dc2626; color: white; padding: 10px 15px; border: none;">
+            Yes, Delete
+        </button>
+
+        <a href="{% url 'examination_module' %}">Cancel</a>
+    </form>
+
+</div>
+
+</body>
+</html>

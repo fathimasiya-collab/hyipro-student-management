@@ -1,0 +1,1 @@
+web: gunicorn hyipro.wsgi:application
